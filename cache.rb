@@ -8,15 +8,14 @@ class Cache
   end
 
   def put(key, value)
-    if current_cache[key]
-      current_cache[key] << value
-    else
-      current_cache[key] = [value]
+    if !current_cache[key]
+      current_cache[key] = []
     end
+    current_cache[key] << [value]
   end
 
   def get(key, version = 0)
-    if current_cache[key] && current_cache[key].length > version
+    if current_cache[key] && current_cache[key].length > version && version >= 0
       puts current_cache[key][version - 1]
     else
       puts 'null'
