@@ -1,5 +1,6 @@
 
 require 'pry'
+
 class Cache
   attr_reader  :current_cache
 
@@ -7,16 +8,22 @@ class Cache
     @current_cache = {}
   end
 
-  def put(key, value)
+  def put(key, value, date)
     if !current_cache[key]
-      current_cache[key] = []
+      current_cache[key] = {}
     end
-    current_cache[key] << [value]
+    current_cache[key][date] = value
+    current_cache[key]['last'] = date
   end
 
-  def get(key, version = 0)
-    if current_cache[key] && current_cache[key].length > version && version >= 0
-      puts current_cache[key][version - 1]
+  def get(key, date = nil)
+    if current_cache[key]
+      if date.nil?
+        last_date = current_cache[key]['last']
+        puts current_cache[key][last_date]
+      else
+        puts current_cache[key][date]
+      end
     else
       puts 'null'
     end
@@ -26,12 +33,12 @@ end
 
 
 cache_1 = Cache.new
-cache_1.put("fish", "trout")
-cache_1.put("fish", "salmon")
-cache_1.put("fish", "tuna")
+cache_1.put("fish", "trout", "12/3/2012")
+cache_1.put("fish", "salmon", "3/5/1998")
+cache_1.put("fish", "tuna", "3/9/2001")
 cache_1.get("fish")
-cache_1.get("fish", 1)
-cache_1.get("fish", 2)
-cache_1.get("fish", 3)
+cache_1.get("fish", "12/3/2012")
+cache_1.get("fish", "3/5/1998")
+cache_1.get("fish", '2/3/2009')
 
 cache_1.get('goat')
